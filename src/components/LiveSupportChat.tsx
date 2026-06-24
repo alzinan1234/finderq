@@ -1,6 +1,7 @@
 // @ts-nocheck
 'use client'
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { MessageCircle, X, Send, Minimize2, Maximize2 } from "lucide-react";
 
 interface Message {
@@ -32,7 +33,13 @@ export function LiveSupportChat({
   const [isMinimized, setIsMinimized] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Ensure portal target (document.body) only used after client mount (avoids SSR mismatch)
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Get current user's messages
   const currentMessages = conversations[userName] || [
@@ -109,16 +116,19 @@ export function LiveSupportChat({
     }
   }, [currentMessages, isOpen]);
 
-  return (
+  const content = (
     <>
       {/* Floating Chat Button */}
       {!isOpen && (
         <button
           onClick={handleOpenChat}
-          className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-br from-[#00d4ff] to-[#0066ff] hover:from-[#00b8e6] hover:to-[#0055cc] rounded-full shadow-2xl flex items-center justify-center transition-all z-[9999] group relative hover:scale-110 animate-pulse"
+          className="w-16 h-16 bg-gradient-to-br from-[#00d4ff] to-[#0066ff] hover:from-[#00b8e6] hover:to-[#0055cc] rounded-full shadow-2xl flex items-center justify-center transition-all group relative hover:scale-110 animate-pulse"
           title="Open Support Chat"
           style={{ 
-            zIndex: 9999,
+            position: 'fixed',
+            bottom: '24px',
+            right: '24px',
+            zIndex: 999999,
             boxShadow: '0 0 30px rgba(0, 212, 255, 0.6), 0 0 60px rgba(0, 212, 255, 0.3)'
           }}
         >
@@ -140,8 +150,13 @@ export function LiveSupportChat({
       {/* Chat Window */}
       {isOpen && (
         <div 
-          className={`fixed ${isMinimized ? 'bottom-6 right-6 w-80 h-16' : 'bottom-6 right-6 w-96 h-[600px]'} bg-[#1a1d29] rounded-2xl shadow-2xl z-[9999] flex flex-col border border-[#00d4ff]/30 transition-all duration-300`}
-          style={{ zIndex: 9999 }}
+          className={`${isMinimized ? 'w-80 h-16' : 'w-96 h-[600px]'} bg-[#1a1d29] rounded-2xl shadow-2xl flex flex-col border border-[#00d4ff]/30 transition-all duration-300`}
+          style={{
+            position: 'fixed',
+            bottom: '24px',
+            right: '24px',
+            zIndex: 999999,
+          }}
         >
           {/* Header */}
           <div className="bg-red-600 text-white px-4 py-2.5 rounded-t-2xl flex items-center justify-between border-b border-white/10">
@@ -258,4 +273,10 @@ export function LiveSupportChat({
       `}</style>
     </>
   );
+
+  // Render via portal directly into document.body so no parent's transform/overflow/filter
+  // can turn `position: fixed` into ancestor-relative positioning. This is what keeps the
+  // button truly pinned to the viewport's bottom-right corner regardless of scroll.
+  if (!mounted) return null;
+  return createPortal(content, document.body);
 }

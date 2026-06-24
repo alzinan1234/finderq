@@ -47,7 +47,7 @@ next-env.d.ts
 # generated files
 .vercel/
 
-# lock files (optional - team policy অনুযায়ী)
+# lock files 
 # package-lock.json
 # yarn.lock
 # pnpm-lock.yaml
