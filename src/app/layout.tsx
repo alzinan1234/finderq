@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-[#0a0e27]">
+      <body className="min-h-screen ">
         <AppProviders>
           <SiteShell>{children}</SiteShell>
           <Toaster position="top-center" richColors closeButton theme="dark" />

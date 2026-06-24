@@ -132,7 +132,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#0a0e27] text-white">
       <NavBar />
-      <main className="pt-20">{children}</main>
+      <main className="">{children}</main>
 
       {/* Notification Panel */}
       {isLoggedIn && (

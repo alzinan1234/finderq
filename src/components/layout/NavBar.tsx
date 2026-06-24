@@ -24,7 +24,6 @@ const REGIONS_MORE = [
   { label: 'ME / SEA',   href: '/me-sea' },
 ]
 
-// Map pathname -> display label for NavBar
 const PATH_TO_LABEL: Record<string, string> = {
   '/euw': 'EUW', '/eune': 'EUNE', '/na': 'NA', '/kr': 'KR', '/br': 'BR',
   '/lan-las': 'LAN/LAS', '/oce': 'OCE', '/tr': 'TR', '/jp': 'JP', '/me-sea': 'ME/SEA',
@@ -48,7 +47,8 @@ export function NavBar() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 flex items-center justify-between px-2 py-3 z-50"
+      id="main-navbar"
+      className="fixed  left-0 right-0 flex items-center justify-between px-2  z-50 "
       onClick={(e) => e.stopPropagation()}
     >
       {/* Logo */}
@@ -241,7 +241,6 @@ export function NavBar() {
                           : <span className="text-white font-bold">{userName?.slice(0, 2).toUpperCase()}</span>
                         }
                       </div>
-                      {/* Status cycler */}
                       <button
                         onClick={(e) => {
                           e.stopPropagation()

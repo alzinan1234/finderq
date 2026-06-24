@@ -150,7 +150,7 @@ export function MainLayout() {
     <div className="min-h-screen bg-[#0a0e27] text-white" onClick={() => set({ isRegionDropdownOpen: false, isProfileDropdownOpen: false } as any)}>
       <NavBar />
 
-      <main className="pt-20">
+      <main className="">
         {currentPage === 'about' && (
           <AboutPage onGetStarted={() => set({ isSignUpOpen: true })} language={selectedLanguage} />
         )}
